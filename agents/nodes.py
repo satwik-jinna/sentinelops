@@ -12,6 +12,7 @@ import uuid
 from agents.state import AlertState
 from tools.mcp_tools import asset_lookup, cve_lookup, extract_ips, ip_reputation_lookup
 from tools.rag import recommend_playbook, search_incidents
+from tools.security import sanitize_alert_text
 
 
 _USE_LLM = bool(os.getenv("OPENAI_API_KEY"))
@@ -33,10 +34,12 @@ def _llm():
 # --- 1. Ingestion agent -----------------------------------------------
 
 def ingestion_agent(state: AlertState) -> dict:
+    cleaned_text, was_flagged = sanitize_alert_text(state["raw_alert"].strip())
     normalized = {
         "source": state.get("source", "unknown"),
-        "text": state["raw_alert"].strip(),
+        "text": cleaned_text,
         "ips": extract_ips(state["raw_alert"]),
+        "prompt_injection_flagged": was_flagged,
     }
     alert_id = str(uuid.uuid4())[:8]
     trace = state.get("trace", [])
