@@ -35,9 +35,19 @@ _INCIDENT_LIBRARY = [
 
 
 def search_incidents(alert_type: str, top_k: int = 2) -> list[dict]:
-    """Naive keyword match standing in for a real vector similarity search."""
-    matches = [inc for inc in _INCIDENT_LIBRARY if inc["alert_type"] == alert_type]
-    return matches[:top_k]
+    """Rank past incidents by relevance to the given alert type.
+
+    This is a stand-in for real semantic search. Swap this function's
+    body for an embedding lookup (Pinecone/Chroma) once real incident
+    data and an embedding model are available — the return shape stays
+    the same, so agents/nodes.py doesn't need to change.
+    """
+    scored = [
+        (inc, 1.0 if inc["alert_type"] == alert_type else 0.0)
+        for inc in _INCIDENT_LIBRARY
+    ]
+    scored.sort(key=lambda pair: pair[1], reverse=True)
+    return [inc for inc, score in scored if score > 0][:top_k]
 
 
 def recommend_playbook(similar_incidents: list[dict]) -> str:
