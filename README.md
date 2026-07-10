@@ -1,3 +1,4 @@
+![CI](https://github.com/satwik-jinna/sentinelops/actions/workflows/ci.yml/badge.svg)
 # SentinelOps
 
 Autonomous security operations agent platform. A LangGraph multi-agent
