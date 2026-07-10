@@ -13,6 +13,12 @@ from typing import Literal, TypedDict
 Severity = Literal["low", "medium", "high", "critical"]
 Action = Literal["auto_remediate", "escalate", "close_false_positive"]
 
+"""
+AlertState is the single source of truth passed between every agent
+in the graph. Each agent reads only the keys it needs and writes only
+the keys it owns, which is what makes every node in agents/nodes.py
+independently unit-testable.
+"""
 
 class AlertState(TypedDict, total=False):
     # --- input ---
