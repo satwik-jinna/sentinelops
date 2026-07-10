@@ -53,7 +53,7 @@ Without an `OPENAI_API_KEY` set, the pipeline falls back to a rule-based
 stub classifier so the whole graph is runnable and testable with zero
 external dependencies — useful for local dev and CI.
 
-## Design notes for interviews
+## Design notes
 
 - **Agents are independently testable.** Each node in `agents/nodes.py`
   is a plain function `(state) -> state_updates`, so you can unit test
